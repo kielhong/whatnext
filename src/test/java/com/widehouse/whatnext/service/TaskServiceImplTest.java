@@ -5,6 +5,7 @@ import static com.widehouse.whatnext.domain.TaskStatus.TODO;
 import static java.time.ZonedDateTime.now;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.BDDAssertions.then;
+import static org.assertj.core.api.BDDAssertions.thenThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -12,9 +13,11 @@ import static org.mockito.Mockito.verify;
 import com.widehouse.whatnext.domain.Category;
 import com.widehouse.whatnext.domain.Task;
 import com.widehouse.whatnext.domain.TaskRepository;
+import com.widehouse.whatnext.exception.TaskNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import lombok.extern.slf4j.Slf4j;
@@ -84,6 +87,27 @@ public class TaskServiceImplTest {
     }
 
     @Test
+    public void getTask_withId_thenReturnTask() {
+        given(taskRepository.findById(1))
+                .willReturn(Optional.of(new Task(1, "task", 1, TODO, category, now())));
+
+        Task result = taskService.getTask(1);
+
+        then(result)
+                .hasFieldOrPropertyWithValue("id", 1)
+                .hasFieldOrPropertyWithValue("description", "task");
+    }
+
+    @Test
+    public void getTask_withNotExistTaskId_thenRaiseTaskNotFoundException() {
+        given(taskRepository.findById(1))
+                .willReturn(Optional.empty());
+
+        thenThrownBy(() -> taskService.getTask(1))
+                .isInstanceOf(TaskNotFoundException.class);
+    }
+
+    @Test
     public void findAll() {
         List<Task> tasks = new ArrayList<>();
         IntStream.range(1, 3)
@@ -99,7 +123,18 @@ public class TaskServiceImplTest {
 
     @Test
     public void findAll_withCategory_thenListByCategory() {
-        Task example = new Task(null, null, null, category);
+        Task example = new Task();
+        example.setCategory(category);
+        example.setStatus(null);
+        example.setPriority(null);
+        log.info("task = {}", example);
+
+        Task example2 = new Task();
+        example2.setCategory(category);
+        example2.setStatus(null);
+        example2.setPriority(null);
+
+        log.info("equals={}", example.equals(example2));
         given(taskRepository.findAll(Example.of(example)))
                 .willReturn(tasks.stream().filter(task -> task.getCategory().equals(category)).collect(toList()));
 

@@ -27,15 +27,6 @@ public class TaskTest {
     }
 
     @Test
-    public void testEquals() {
-        Task x = new Task("desc", 1, TODO, category);
-        Task y = new Task("desc", 1, TODO, category);
-
-        then(x.equals(y) && y.equals(x))
-                .isTrue();
-    }
-
-    @Test
     public void setStatus_thenUpdateStatus() {
         Task task = new Task("desc", 1, TODO, category);
 

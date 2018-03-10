@@ -9,6 +9,8 @@ import java.util.List;
 public interface TaskService {
     Task register(String description, Integer priority, Category category);
 
+    Task getTask(Integer id);
+
     List<Task> findAll();
 
     List<Task> findAll(Category category, TaskStatus status, Integer priority);
