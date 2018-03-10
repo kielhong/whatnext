@@ -119,4 +119,14 @@ public class ApiTaskControllerTest {
                 .andExpect(jsonPath("$[?(@.category.id == 1)]", hasSize(tasks.size())));
     }
 
+    @Test
+    public void listByStatus_theListTasksByStatus() throws Exception {
+        given(taskService.findAll(null, TODO, null))
+                .willReturn(tasks.stream().filter(x -> x.getStatus().equals(TODO)).collect(toList()));
+
+        mvc.perform(get("/api/tasks?status=todo")
+                .with(user("user")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[?(@.status == 'TODO')]", hasSize(10)));
+    }
 }
