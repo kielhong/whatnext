@@ -3,7 +3,9 @@ package com.widehouse.whatnext.controller.api;
 import static com.widehouse.whatnext.domain.TaskStatus.DONE;
 import static com.widehouse.whatnext.domain.TaskStatus.TODO;
 import static java.time.ZonedDateTime.now;
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Java6BDDAssertions.then;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.BDDMockito.given;
 
 import static org.mockito.Mockito.verify;
@@ -65,7 +67,7 @@ public class ApiTaskControllerTest {
         given(categoryService.getCategory(1))
                 .willReturn(category);
 
-        mvc.perform(post("/api/task")
+        mvc.perform(post("/api/tasks")
                     .with(user("user"))
                     .with(csrf())
                     .param("description", "desc")
@@ -77,17 +79,6 @@ public class ApiTaskControllerTest {
     }
 
     @Test
-    public void listAll_thenListAllTasks() throws Exception {
-        given(taskService.findAll())
-                .willReturn(tasks);
-
-        mvc.perform(get("/api/task")
-                    .with(user("user")))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray());
-    }
-
-    @Test
     public void updateStatus_thenUpdateTaskStatus() throws Exception {
         given(taskService.getTask(1))
                 .willReturn(task);
@@ -95,12 +86,37 @@ public class ApiTaskControllerTest {
         given(taskService.update(updatedTask))
                 .willReturn(updatedTask);
 
-        mvc.perform(put("/api/task/1")
-                    .with(user("user"))
-                    .with(csrf())
+        mvc.perform(put("/api/tasks/1")
+                .with(user("user"))
+                .with(csrf())
                 .param("status", "done"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.status").value(DONE.toString()));
     }
+
+    @Test
+    public void listAll_thenListAllTasks() throws Exception {
+        given(taskService.findAll(null, null, null))
+                .willReturn(tasks);
+
+        mvc.perform(get("/api/tasks")
+                    .with(user("user")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(tasks.size())));
+    }
+
+    @Test
+    public void listByCategory_theListTasksByCategory() throws Exception {
+        given(categoryService.getCategory(1))
+                .willReturn(category);
+        given(taskService.findAll(category, null, null))
+                .willReturn(tasks.stream().filter(x -> x.getCategory().equals(category)).collect(toList()));
+
+        mvc.perform(get("/api/tasks?category=1")
+                .with(user("user")))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[?(@.category.id == 1)]", hasSize(tasks.size())));
+    }
+
 }

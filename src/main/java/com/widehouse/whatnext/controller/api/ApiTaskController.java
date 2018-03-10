@@ -34,7 +34,7 @@ public class ApiTaskController {
      * @param categoryId id of category
      * @return com.widehouse.whatnext.domain.Task
      */
-    @PostMapping("task")
+    @PostMapping("tasks")
     public Task create(@RequestParam String description,
                        @RequestParam(defaultValue = "1") Integer priority,
                        @RequestParam Integer categoryId) {
@@ -43,19 +43,24 @@ public class ApiTaskController {
         return taskService.register(description, priority, category);
     }
 
-    @GetMapping("task")
-    List<Task> listAll() {
-        return taskService.findAll();
+    @GetMapping("tasks")
+    List<Task> listTasks(@RequestParam(value = "category", required = false) Integer categoryId,
+                         @RequestParam(required = false) TaskStatus status) {
+        Category category = null;
+        if (categoryId != null) {
+            category = categoryService.getCategory(categoryId);
+        }
+
+        return taskService.findAll(category, status, null);
     }
 
-    @PutMapping(value = "task/{taskId}")
+    @PutMapping(value = "tasks/{taskId}")
     Task updateStatus(@PathVariable Integer taskId, @RequestParam TaskStatus status) {
         Task task = taskService.getTask(taskId);
         task.setStatus(status);
 
         return taskService.update(task);
     }
-
 
     /**
      * TaskStatus request parameter converter.
