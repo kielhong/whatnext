@@ -16,7 +16,7 @@ public class TaskTest {
     }
 
     @Test
-    public void constructorTest() {
+    public void testConstructor() {
         Task task = new Task("desc", 1, TODO, category);
 
         then(task)
@@ -24,6 +24,15 @@ public class TaskTest {
                 .hasFieldOrPropertyWithValue("priority", 1)
                 .hasFieldOrPropertyWithValue("status", TODO)
                 .hasFieldOrPropertyWithValue("category", category);
+    }
+
+    @Test
+    public void testEquals() {
+        Task x = new Task("desc", 1, TODO, category);
+        Task y = new Task("desc", 1, TODO, category);
+
+        then(x.equals(y) && y.equals(x))
+                .isTrue();
     }
 
     @Test
