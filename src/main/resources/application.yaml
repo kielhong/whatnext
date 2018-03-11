@@ -7,3 +7,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  thymeleaf:
+    cache: false
+  devtools:
+    restart:
+      poll-interval: 100
+      quiet-period: 50
+      exclude: static/**,templates/**

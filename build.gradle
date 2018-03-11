@@ -23,6 +23,7 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-security')
 	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
+    compile("org.springframework.boot:spring-boot-devtools")
 
     compile('org.projectlombok:lombok')
 	runtime('com.h2database:h2')
@@ -45,4 +46,9 @@ jacocoTestReport {
                                         '**/**View.class'])
         })
     }
+}
+
+bootRun {
+    systemProperties = System.properties
+    sourceResources sourceSets.main
 }
