@@ -3,7 +3,6 @@ package com.widehouse.whatnext.controller.web;
 import static com.widehouse.whatnext.domain.TaskStatus.TODO;
 import static java.time.ZonedDateTime.now;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.widehouse.whatnext.domain.Category;
@@ -13,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import org.hamcrest.collection.IsArray;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

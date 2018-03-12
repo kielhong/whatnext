@@ -33,6 +33,10 @@ dependencies {
 	testCompile('org.springframework.security:spring-security-test')
 }
 
+test {
+    systemProperty "spring.profiles.active", "test"
+}
+
 checkstyle {
     toolVersion = '8.7'
 }

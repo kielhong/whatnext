@@ -7,6 +7,8 @@ import static org.assertj.core.api.BDDAssertions.then;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import lombok.extern.slf4j.Slf4j;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,12 +16,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.Example;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-@Transactional
+@ActiveProfiles("test")
+@Slf4j
 public class TaskRepositoryTest {
     @Autowired
     private TestEntityManager entityManager;
@@ -30,6 +34,9 @@ public class TaskRepositoryTest {
 
     @Before
     public void setup() {
+
+        List<Task> tasks = taskRepository.findAll();
+        log.info("tasks = {}", tasks);
         category = new Category(1, "home", "ffffff");
         entityManager.persist(category);
     }

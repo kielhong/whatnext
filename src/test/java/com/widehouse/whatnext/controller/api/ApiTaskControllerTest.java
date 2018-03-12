@@ -4,10 +4,8 @@ import static com.widehouse.whatnext.domain.TaskStatus.DONE;
 import static com.widehouse.whatnext.domain.TaskStatus.TODO;
 import static java.time.ZonedDateTime.now;
 import static java.util.stream.Collectors.toList;
-import static org.assertj.core.api.Java6BDDAssertions.then;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.BDDMockito.given;
-
 import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
@@ -26,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import org.assertj.core.api.BDDAssertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

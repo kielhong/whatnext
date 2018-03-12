@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +31,6 @@ import org.springframework.data.domain.Example;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-@Slf4j
 public class TaskServiceImplTest {
     @TestConfiguration
     static class TaskServiceImplContextConfiguration {
@@ -127,14 +125,7 @@ public class TaskServiceImplTest {
         example.setCategory(category);
         example.setStatus(null);
         example.setPriority(null);
-        log.info("task = {}", example);
 
-        Task example2 = new Task();
-        example2.setCategory(category);
-        example2.setStatus(null);
-        example2.setPriority(null);
-
-        log.info("equals={}", example.equals(example2));
         given(taskRepository.findAll(Example.of(example)))
                 .willReturn(tasks.stream().filter(task -> task.getCategory().equals(category)).collect(toList()));
 
