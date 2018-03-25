@@ -1,5 +1,7 @@
 package com.widehouse.whatnext.service;
 
+import static java.time.ZonedDateTime.now;
+
 import com.widehouse.whatnext.domain.Category;
 import com.widehouse.whatnext.domain.Task;
 import com.widehouse.whatnext.domain.TaskRepository;
@@ -22,7 +24,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task register(String description, Integer priority, Category category) {
-        Task newTask = new Task(description, priority, TaskStatus.TODO, category);
+        Task newTask = new Task(1, description, priority, TaskStatus.TODO, category, now());
 
         return taskRepository.save(newTask);
     }
@@ -44,14 +46,16 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> findAll(Category category, TaskStatus status, Integer priority) {
-        Task example = new Task();
-        example.setCategory(category);
-        example.setStatus(status);
-        example.setPriority(priority);
-
-        log.info("task = {}", example);
-        return taskRepository.findAll(Example.of(example));
+    public List<Task> findAll(Category category, TaskStatus status) {
+        if (category != null && status != null) {
+            return taskRepository.findByCategoryAndStatus(category, status);
+        } else if (category != null && status == null) {
+            return taskRepository.findByCategory(category);
+        } else if (category == null && status != null) {
+            return taskRepository.findByStatus(status);
+        } else {
+            return taskRepository.findAll();
+        }
     }
 
     @Override

@@ -85,11 +85,7 @@ public class TaskRepositoryTest {
         IntStream.range(1, 3)
                 .forEach(i -> entityManager.persist(new Task("todoWorkDesc", 1, DONE, category1)));
 
-        Task task = new Task();
-        task.setStatus(DONE);
-        task.setCategory(category);
-
-        List<Task> result = taskRepository.findAll(Example.of(task));
+        List<Task> result = taskRepository.findByCategoryAndStatus(category, DONE);
 
         then(result)
                 .extracting("description").containsOnly("doneDesc");

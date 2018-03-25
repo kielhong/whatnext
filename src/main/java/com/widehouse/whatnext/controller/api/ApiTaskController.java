@@ -51,7 +51,7 @@ public class ApiTaskController {
             category = categoryService.getCategory(categoryId);
         }
 
-        return taskService.findAll(category, status, null);
+        return taskService.findAll(category, status);
     }
 
     @PutMapping(value = "tasks/{taskId}")

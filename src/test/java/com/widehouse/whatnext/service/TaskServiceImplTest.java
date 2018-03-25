@@ -121,19 +121,26 @@ public class TaskServiceImplTest {
 
     @Test
     public void findAll_withCategory_thenListByCategory() {
-        Task example = new Task();
-        example.setCategory(category);
-        example.setStatus(null);
-        example.setPriority(null);
-
-        given(taskRepository.findAll(Example.of(example)))
+        given(taskRepository.findByCategory(category))
                 .willReturn(tasks.stream().filter(task -> task.getCategory().equals(category)).collect(toList()));
 
-        List<Task> result = taskService.findAll(category, null, null);
+        List<Task> result = taskService.findAll(category, null);
 
         then(result)
                 .extracting("category")
                 .containsOnly(category);
+    }
+
+    @Test
+    public void findAll_withStatus_thenListByStatus() {
+        given(taskRepository.findByStatus(TODO))
+                .willReturn(tasks.stream().filter(task -> task.getStatus().equals(TODO)).collect(toList()));
+
+        List<Task> result = taskService.findAll(null, TODO);
+
+        then(result)
+                .extracting("status")
+                .containsOnly(TODO);
     }
 
     @Test

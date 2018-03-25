@@ -69,7 +69,7 @@ public class ApiTaskControllerTest {
                     .with(csrf())
                     .param("description", "desc")
                     .param("priority", "1")
-                    .param("categoryId", category.getId().toString()))
+                    .param("categoryId", String.valueOf(category.getId())))
                 .andExpect(status().isOk());
 
         verify(taskService).register("desc", 1, category);
@@ -94,7 +94,7 @@ public class ApiTaskControllerTest {
 
     @Test
     public void listAll_thenListAllTasks() throws Exception {
-        given(taskService.findAll(null, null, null))
+        given(taskService.findAll(null, null))
                 .willReturn(tasks);
 
         mvc.perform(get("/api/tasks")
@@ -107,7 +107,7 @@ public class ApiTaskControllerTest {
     public void listByCategory_theListTasksByCategory() throws Exception {
         given(categoryService.getCategory(1))
                 .willReturn(category);
-        given(taskService.findAll(category, null, null))
+        given(taskService.findAll(category, null))
                 .willReturn(tasks.stream().filter(x -> x.getCategory().equals(category)).collect(toList()));
 
         mvc.perform(get("/api/tasks?category=1")
@@ -118,7 +118,7 @@ public class ApiTaskControllerTest {
 
     @Test
     public void listByStatus_theListTasksByStatus() throws Exception {
-        given(taskService.findAll(null, TODO, null))
+        given(taskService.findAll(null, TODO))
                 .willReturn(tasks.stream().filter(x -> x.getStatus().equals(TODO)).collect(toList()));
 
         mvc.perform(get("/api/tasks?status=todo")
