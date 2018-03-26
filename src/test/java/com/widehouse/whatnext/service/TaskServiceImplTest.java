@@ -2,6 +2,7 @@ package com.widehouse.whatnext.service;
 
 import static com.widehouse.whatnext.domain.TaskStatus.DONE;
 import static com.widehouse.whatnext.domain.TaskStatus.TODO;
+import static com.widehouse.whatnext.domain.specification.TaskSpecification.with;
 import static java.time.ZonedDateTime.now;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.BDDAssertions.then;
@@ -13,6 +14,7 @@ import static org.mockito.Mockito.verify;
 import com.widehouse.whatnext.domain.Category;
 import com.widehouse.whatnext.domain.Task;
 import com.widehouse.whatnext.domain.TaskRepository;
+import com.widehouse.whatnext.domain.specification.TaskSpecification;
 import com.widehouse.whatnext.exception.TaskNotFoundException;
 
 import java.util.ArrayList;
@@ -27,7 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.domain.Example;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
@@ -121,10 +123,10 @@ public class TaskServiceImplTest {
 
     @Test
     public void findAll_withCategory_thenListByCategory() {
-        given(taskRepository.findByCategory(category))
+        given(taskRepository.findAll(any(Specification.class)))
                 .willReturn(tasks.stream().filter(task -> task.getCategory().equals(category)).collect(toList()));
 
-        List<Task> result = taskService.findAll(category, null);
+        List<Task> result = taskService.find(category, null);
 
         then(result)
                 .extracting("category")
@@ -133,10 +135,10 @@ public class TaskServiceImplTest {
 
     @Test
     public void findAll_withStatus_thenListByStatus() {
-        given(taskRepository.findByStatus(TODO))
+        given(taskRepository.findAll(any(Specification.class)))
                 .willReturn(tasks.stream().filter(task -> task.getStatus().equals(TODO)).collect(toList()));
 
-        List<Task> result = taskService.findAll(null, TODO);
+        List<Task> result = taskService.find(null, TODO);
 
         then(result)
                 .extracting("status")

@@ -94,7 +94,7 @@ public class ApiTaskControllerTest {
 
     @Test
     public void listAll_thenListAllTasks() throws Exception {
-        given(taskService.findAll(null, null))
+        given(taskService.find(null, null))
                 .willReturn(tasks);
 
         mvc.perform(get("/api/tasks")
@@ -107,7 +107,7 @@ public class ApiTaskControllerTest {
     public void listByCategory_theListTasksByCategory() throws Exception {
         given(categoryService.getCategory(1))
                 .willReturn(category);
-        given(taskService.findAll(category, null))
+        given(taskService.find(category, null))
                 .willReturn(tasks.stream().filter(x -> x.getCategory().equals(category)).collect(toList()));
 
         mvc.perform(get("/api/tasks?category=1")
@@ -118,7 +118,7 @@ public class ApiTaskControllerTest {
 
     @Test
     public void listByStatus_theListTasksByStatus() throws Exception {
-        given(taskService.findAll(null, TODO))
+        given(taskService.find(null, TODO))
                 .willReturn(tasks.stream().filter(x -> x.getStatus().equals(TODO)).collect(toList()));
 
         mvc.perform(get("/api/tasks?status=todo")

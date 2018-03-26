@@ -6,6 +6,7 @@ import com.widehouse.whatnext.domain.Category;
 import com.widehouse.whatnext.domain.Task;
 import com.widehouse.whatnext.domain.TaskRepository;
 import com.widehouse.whatnext.domain.TaskStatus;
+import com.widehouse.whatnext.domain.specification.TaskSpecification;
 import com.widehouse.whatnext.exception.TaskNotFoundException;
 
 import java.util.List;
@@ -13,7 +14,6 @@ import java.util.Optional;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -46,16 +46,10 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> findAll(Category category, TaskStatus status) {
-        if (category != null && status != null) {
-            return taskRepository.findByCategoryAndStatus(category, status);
-        } else if (category != null && status == null) {
-            return taskRepository.findByCategory(category);
-        } else if (category == null && status != null) {
-            return taskRepository.findByStatus(status);
-        } else {
-            return taskRepository.findAll();
-        }
+    public List<Task> find(Category category, TaskStatus status) {
+        log.info("category={}, status={}", category, status);
+
+        return taskRepository.findAll(TaskSpecification.with(category, status));
     }
 
     @Override

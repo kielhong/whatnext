@@ -4,21 +4,20 @@ import static com.widehouse.whatnext.domain.TaskStatus.DONE;
 import static com.widehouse.whatnext.domain.TaskStatus.TODO;
 import static org.assertj.core.api.BDDAssertions.then;
 
+import com.widehouse.whatnext.domain.specification.TaskSpecification;
+
 import java.util.List;
 import java.util.stream.IntStream;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.data.domain.Example;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -75,7 +74,7 @@ public class TaskRepositoryTest {
     }
 
     @Test
-    public void findByExample() {
+    public void findWithSpecification() {
         Category category1 = new Category(2, "work", "00ff00");
         entityManager.persist(category1);
         IntStream.range(1, 3)
@@ -85,9 +84,17 @@ public class TaskRepositoryTest {
         IntStream.range(1, 3)
                 .forEach(i -> entityManager.persist(new Task("todoWorkDesc", 1, DONE, category1)));
 
-        List<Task> result = taskRepository.findByCategoryAndStatus(category, DONE);
-
+        List<Task> result = taskRepository.findAll(TaskSpecification.with(category, DONE));
         then(result)
                 .extracting("description").containsOnly("doneDesc");
+
+        result = taskRepository.findAll(TaskSpecification.with(null, null));
+        then(result.size())
+                .isEqualTo(6);
+
+        result = taskRepository.findAll(TaskSpecification.with(category, null));
+        then(result)
+                .extracting("category")
+                .containsOnly(category);
     }
 }

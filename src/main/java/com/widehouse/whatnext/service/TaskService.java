@@ -13,7 +13,7 @@ public interface TaskService {
 
     List<Task> findAll();
 
-    List<Task> findAll(Category category, TaskStatus status);
+    List<Task> find(Category category, TaskStatus status);
 
     Task update(Task task);
 }
