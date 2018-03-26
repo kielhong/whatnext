@@ -4,7 +4,7 @@ import javax.persistence.Entity
 import javax.persistence.Id
 
 @Entity
-class Category (
+data class Category (
         @Id
         var id: Int = 1,
         var name: String = "",

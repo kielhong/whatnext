@@ -2,6 +2,7 @@ package com.widehouse.whatnext.domain;
 
 import static com.widehouse.whatnext.domain.TaskStatus.DONE;
 import static com.widehouse.whatnext.domain.TaskStatus.TODO;
+import static java.time.ZonedDateTime.now;
 import static org.assertj.core.api.BDDAssertions.then;
 
 import org.junit.Before;
