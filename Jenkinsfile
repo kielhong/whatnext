@@ -1,10 +1,12 @@
 node('master') {
-    checkout scm
+    stage('Poll') {
+        checkout scm
+    }
     stage('Prepare') {
         sh './gradlew clean'
     }
     stage('Checkstyle') {
-        sh './gradlew checkstyleMain checkstyleTest'
+        sh './gradlew checkstyleMain'
     }    
     stage('Test') {
         sh './gradlew test'
